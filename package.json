@@ -1,0 +1,19 @@
+{
+  "name": "food_app",
+  "version": "1.0.0",
+  "description": "food app",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Indra583/myReact.git"
+  },
+  "author": "Indrashekar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Indra583/myReact/issues"
+  },
+  "homepage": "https://github.com/Indra583/myReact#readme"
+}
