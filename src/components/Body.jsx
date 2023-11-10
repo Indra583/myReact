@@ -1,6 +1,8 @@
 import RestuarentCard from "./RestuarentCard";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
+import useOnlineStatus from "./useOnlineStatus";
 
 const Body = () => {
   const [restuarentList, setRestuarentList] = useState([]);
@@ -8,6 +10,8 @@ const Body = () => {
   const [filteredList, setFilteredList] = useState([]);
 
   const [searchText, setSearchText] = useState("");
+
+  const onlineStatus = useOnlineStatus();
 
   useEffect(() => {
     fetchData();
@@ -32,32 +36,40 @@ const Body = () => {
     );
   };
 
-  // conditional rendering
-  // if(restuarentList.length === 0){
-  //   return <Shimmer />
-  // }
+  if (onlineStatus === false) {
+    return <h1>Looks Like your are in offline !!!</h1>;
+  }
 
-  return restuarentList && restuarentList.length === 0 ? (
-    <Shimmer />
-  ) : (
-    <div className="body">
-      <div className="search">
+  // conditional rendering
+  if (restuarentList && restuarentList.length === 0) {
+    return <Shimmer />;
+  }
+
+  //restuarentList && restuarentList.length === 0 ? (
+  // <Shimmer /> ) :
+
+  return (
+    <div className="bg-pink-200">
+      <div className="flex items-center justify-center p-2">
         <input
           type="text"
-          className="search-box"
+          className="border p-2 mr-2 w-96 rounded-md focus:outline-none focus:ring focus:border-blue-300 "
           value={searchText}
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
         />
         <button
+          className="px-4 py-2 bg-orange-400 m-4 rounded-lg"
           onClick={() => {
             // filter the restuarent card and filter the UI
-            console.log(searchText,"searchText");
+            console.log(searchText, "searchText");
             // Search Text
             const filteredList = restuarentList.filter((res) => {
               console.log(res.info.name, "resInfoName");
-               return res.info.name.toLowerCase().includes(searchText.toLowerCase());
+              return res.info.name
+                .toLowerCase()
+                .includes(searchText.toLowerCase());
             });
             setFilteredList(filteredList);
           }}
@@ -65,9 +77,15 @@ const Body = () => {
           Search
         </button>
       </div>
-      <div className="res-container">
+      <div className="flex flex-wrap">
         {filteredList.map((restaurant) => (
-          <RestuarentCard key={restaurant.info.id} resData={restaurant} />
+          <Link
+            key={restaurant.info.id}
+            to={"/restaurant/" + restaurant.info.id}
+          >
+            {" "}
+            <RestuarentCard resData={restaurant} />
+          </Link>
         ))}
       </div>
     </div>
