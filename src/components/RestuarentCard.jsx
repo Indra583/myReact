@@ -1,4 +1,4 @@
-import { API_URL } from "../utils/contants";
+import { API_URL } from "../utils/constants";
 
 const RestuarentCard = (props) => {
     const {resData} = props
@@ -22,5 +22,16 @@ const RestuarentCard = (props) => {
       </div>
     );
   };
+
+  export const withOpenInfo = (RestuarentCard) => {
+    return(props) =>{
+      return(
+        <div>
+          <label className=" absolute bg-purple-200 text-white m-2 p-2 rounded-lg z-10"> IsOpen </label>
+          <RestuarentCard {...props}/>
+        </div>
+      )
+    }
+  }
 
   export default RestuarentCard

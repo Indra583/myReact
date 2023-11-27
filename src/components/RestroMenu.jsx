@@ -1,16 +1,19 @@
 // import { useEffect, useState } from "react";
-// import { MENU_URL } from "../utils/contants"
+// import { MENU_URL } from "../utils/constants"
 import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
 import useRestaurantMenu from "./useRestaurantMenu";
-
+import RestaurantCatogery from "./RestaurantCatogery";
+import { useState } from "react";
 
 const RestroMenu = () => {
   // const [resInfo, setResInfo] = useState(null);
 
-  const {resId} = useParams();
+  const { resId } = useParams();
 
   const resInfo = useRestaurantMenu(resId);
+
+  const [showIndex, setShowIndex] = useState(1);
 
   // useEffect(() => {
   //   fetchMenu();
@@ -37,22 +40,37 @@ const RestroMenu = () => {
   const { itemCards } =
     resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card;
 
-  console.log(itemCards, "itemCards");
+  console.log(
+    resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards,
+    "itemCards"
+  );
+
+  const categories =
+    resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (dish) =>
+        dish.card?.card?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
+
+  console.log(categories, "categories");
 
   return (
-    <div className="menu">
-      <h1>{name}</h1>
-      <p>
+    <div className="text-center">
+      <h1 className="my-4 font-bold text-2xl">{name}</h1>
+      <p className="font-bold text-lg">
         {cuisines.join(", ")}:{costForTwoMessage}
       </p>
-      <h2>Menu</h2>
-      <ul>
-        {/* <li>{itemCards[0].card.info.name}</li> */}
-        {itemCards.map((item) => (
-          <li key={item.card.info.id}>{item.card.info.name} - {"Rs."}
-          {item.card.info.price/100 || item.card.info.defaultPrice/100}</li>
-        ))}
-      </ul>
+      {/* catgories accordian */}
+      {categories.map((catogery, index) => {
+        return (
+          <RestaurantCatogery
+            key={catogery?.card?.card.title}
+            data={catogery?.card?.card}
+            showList={index === showIndex ? true : false}
+            setShowIndex={() => setShowIndex(index)}
+          />
+        );
+      })}
     </div>
   );
 };

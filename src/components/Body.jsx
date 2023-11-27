@@ -1,8 +1,10 @@
 import RestuarentCard from "./RestuarentCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState , useContext } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "./useOnlineStatus";
+import { withOpenInfo } from "./RestuarentCard";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   const [restuarentList, setRestuarentList] = useState([]);
@@ -13,6 +15,11 @@ const Body = () => {
 
   const onlineStatus = useOnlineStatus();
 
+  const RestaurantCardDiscount = withOpenInfo(RestuarentCard);
+
+  const { loggedInUser , setUserName } = useContext(UserContext);
+
+  console.log(restuarentList, "restaurant");
   useEffect(() => {
     fetchData();
   }, []);
@@ -76,15 +83,28 @@ const Body = () => {
         >
           Search
         </button>
+        <div>
+          <input className="border border-black p-2 rounded-lg"
+             onChange={(e) => {
+              // value= {loggedInUser}
+              setUserName(e.target.value);
+             }} />
+        </div>
       </div>
+
       <div className="flex flex-wrap">
         {filteredList.map((restaurant) => (
           <Link
             key={restaurant.info.id}
             to={"/restaurant/" + restaurant.info.id}
           >
-            {" "}
-            <RestuarentCard resData={restaurant} />
+            {/* {" "}
+            <RestuarentCard resData={restaurant} /> */}
+            {restaurant.info.isOpen ? (
+              <RestaurantCardDiscount resData={restaurant} />
+            ) : (
+              <RestuarentCard resData={restaurant} />
+            )}
           </Link>
         ))}
       </div>
