@@ -19,28 +19,33 @@ const Body = () => {
 
   const { loggedInUser , setUserName } = useContext(UserContext);
 
-  console.log(restuarentList, "restaurant");
+  //console.log(restuarentList, "restaurant");
   useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
-    );
-
-    const json = await data.json();
-
-    console.log(json, "jsonObject");
-
-    //Optional Chaining
-    setRestuarentList(
-      json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
-
-    setFilteredList(
-      json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
+  const fetchData = async () => { 
+    try {
+      const data = await fetch(
+        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
+      );
+  
+      const json = await data.json();
+  
+      //console.log(json, "jsonObject");
+  
+      //Optional Chaining
+      setRestuarentList(
+        json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants 
+      );
+  
+      setFilteredList(
+        json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants 
+      );
+  
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   if (onlineStatus === false) {
@@ -52,6 +57,10 @@ const Body = () => {
     return <Shimmer />;
   }
 
+  if (filteredList.length === 0) {
+    return <Shimmer />;
+  }
+
   //restuarentList && restuarentList.length === 0 ? (
   // <Shimmer /> ) :
 
@@ -60,6 +69,7 @@ const Body = () => {
       <div className="flex items-center justify-center p-2">
         <input
           type="text"
+          data-testid="searchInput"
           className="border p-2 mr-2 w-96 rounded-md focus:outline-none focus:ring focus:border-blue-300 "
           value={searchText}
           onChange={(e) => {
@@ -70,10 +80,10 @@ const Body = () => {
           className="px-4 py-2 bg-orange-400 m-4 rounded-lg"
           onClick={() => {
             // filter the restuarent card and filter the UI
-            console.log(searchText, "searchText");
+            //console.log(searchText, "searchText");
             // Search Text
             const filteredList = restuarentList.filter((res) => {
-              console.log(res.info.name, "resInfoName");
+             // console.log(res.info.name, "resInfoName");
               return res.info.name
                 .toLowerCase()
                 .includes(searchText.toLowerCase());
