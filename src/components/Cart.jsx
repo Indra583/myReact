@@ -21,7 +21,7 @@ const Cart = () => {
       >
         ClearCart
       </button>
-      <div className="w-6/12 m-auto">
+      <div className="w-6/12 m-auto bg-slate-200 border-white border-b-2" >
         { cartItems.length === 0 && <h1>Cart is Empty</h1>}
         <ItemList items={cartItems} />
       </div>
