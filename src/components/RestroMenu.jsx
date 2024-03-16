@@ -34,8 +34,12 @@ const RestroMenu = () => {
 
   if (resInfo === null) return <Shimmer />;
 
+  console.log("111111111111", resInfo )
+
   const { name, cuisines, costForTwoMessage } =
     resInfo?.cards[0]?.card?.card?.info;
+
+    // console.log("resInfo", resInfo )
 
   const { itemCards } =
     resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card;
